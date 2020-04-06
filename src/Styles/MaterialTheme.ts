@@ -1,4 +1,5 @@
 import { createMuiTheme } from "@material-ui/core";
+import { PRIAMRY_COLOR } from "./Theme";
 
 export const materialTheme = createMuiTheme({
   typography: {
@@ -9,25 +10,26 @@ export const materialTheme = createMuiTheme({
       "Roboto",
       "Helvetica",
       "Arial",
-      "sans-serif"
-    ].join(",")
+      "sans-serif",
+    ].join(","),
+    fontSize: 14,
   },
   palette: {
     primary: {
-      main: "#2980b9"
-    }
+      main: PRIAMRY_COLOR,
+    },
   },
   overrides: {
     MuiMenuItem: {
       root: {
         minHeight: "35px",
-        fontSize: "16px"
-      }
+        fontSize: "16px",
+      },
     },
     MuiToolbar: {
       root: {
-        color: "white"
-      }
-    }
-  }
+        color: "white",
+      },
+    },
+  },
 });

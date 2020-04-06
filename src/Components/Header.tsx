@@ -1,14 +1,15 @@
 import React from "react";
 import styled from "../Styles/index";
 import { Container } from "@material-ui/core";
-import { Plus, Shuffle } from "../Icons";
-import Input from "./Input";
+import { Plus, Shuffle, Profile } from "../Icons";
 import useInput from "../Hooks/useInput";
+import Input from "../Components/Input";
+import { useHistory } from "react-router-dom";
 
 const ContainerWrapper = styled.div`
   width: 100%;
   top: 0px;
-  background-color: ${props => props.theme.darkBleuColor};
+  background-color: ${(props) => props.theme.darkBleuColor};
   position: fixed;
   color: white;
 `;
@@ -59,11 +60,12 @@ const Icons = styled.div`
 const Icon = styled.div`
   width: 30px;
   height: 30px;
-  background-color: ${props => props.theme.blueColor};
+  background-color: ${(props) => props.theme.blueColor};
   border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
+  cursor: pointer;
   :not(:last-child) {
     margin-right: 8px;
   }
@@ -71,6 +73,7 @@ const Icon = styled.div`
 
 export default () => {
   const search = useInput("");
+  const history = useHistory();
 
   return (
     <ContainerWrapper>
@@ -99,6 +102,9 @@ export default () => {
               </Icon>
               <Icon>
                 <Shuffle size={20} />
+              </Icon>
+              <Icon onClick={() => history.push("signin")}>
+                <Profile size={16} />
               </Icon>
             </Icons>
           </Row>

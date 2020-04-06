@@ -1,9 +1,12 @@
 import React from "react";
 import styled from "../Styles/index";
 import Card from "../Components/Card";
+import Header from "../Components/Header";
+import { Container } from "@material-ui/core";
 
 const ContainerWrapper = styled.div`
   width: 100%;
+  padding-top: 94px;
 `;
 
 const ContentWrapper = styled.div`
@@ -17,33 +20,38 @@ const Row = styled.div`
 
 export default () => {
   return (
-    <ContainerWrapper>
-      <ContentWrapper>
-        <Row>
-          <Card />
-        </Row>
-        <Row>
-          <Card />
-        </Row>
-        <Row>
-          <Card />
-        </Row>
-        <Row>
-          <Card />
-        </Row>
-        <Row>
-          <Card />
-        </Row>
-        <Row>
-          <Card />
-        </Row>
-        <Row>
-          <Card />
-        </Row>
-        <Row>
-          <Card />
-        </Row>
-      </ContentWrapper>
-    </ContainerWrapper>
+    <>
+      <Header />
+      <ContainerWrapper>
+        <Container maxWidth="md">
+          <ContentWrapper>
+            <Row>
+              <Card />
+            </Row>
+            <Row>
+              <Card />
+            </Row>
+            <Row>
+              <Card />
+            </Row>
+            <Row>
+              <Card />
+            </Row>
+            <Row>
+              <Card />
+            </Row>
+            <Row>
+              <Card />
+            </Row>
+            <Row>
+              <Card />
+            </Row>
+            <Row>
+              <Card />
+            </Row>
+          </ContentWrapper>
+        </Container>
+      </ContainerWrapper>
+    </>
   );
 };

@@ -3,9 +3,9 @@ import styled from "styled-components";
 
 const Container = styled.input`
   border: 0;
-  border: ${props => props.theme.boxBorder};
-  border-radius: ${props => props.theme.borderRadius};
-  background-color: ${props => props.theme.bgColor};
+  border: ${(props) => props.theme.boxBorder};
+  border-radius: ${(props) => props.theme.borderRadius};
+  background-color: ${(props) => props.theme.bgColor};
   height: 32px;
   padding: 0 6px;
   font-size: 14px;
@@ -16,7 +16,7 @@ type Props = {
   required?: boolean;
   value?: string;
   onChange: (e: FormEvent<HTMLInputElement>) => void;
-  type?: string;
+  type?: "text" | "email" | "password";
   className?: string;
 };
 
@@ -26,7 +26,7 @@ const Input = ({
   value,
   onChange,
   className,
-  type = "text"
+  type = "text",
 }: Props) => (
   <Container
     className={className}
