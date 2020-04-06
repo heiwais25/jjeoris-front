@@ -154,7 +154,7 @@ export default () => {
             <ButtonBox>
               <NaverLogin
                 clientId={process.env.REACT_APP_NAVER_CLIENT_ID || ""}
-                callbackUrl="http://127.0.0.1:3000/login?naver=true"
+                callbackUrl={process.env.REACT_APP_NAVER_CALLBACK_URL || ""}
                 onSuccess={naverOnSuccess}
                 onFailure={() => console.log("error")}
               />
@@ -162,7 +162,7 @@ export default () => {
             <ButtonBox>
               <NaverLogin
                 clientId={process.env.REACT_APP_NAVER_CLIENT_ID || ""}
-                callbackUrl="http://127.0.0.1:3000/login?naver=true"
+                callbackUrl={process.env.REACT_APP_NAVER_CALLBACK_URL || ""}
                 onSuccess={naverOnSuccess}
                 onFailure={() => console.log("error")}
               />
@@ -170,7 +170,7 @@ export default () => {
             <ButtonBox>
               <NaverLogin
                 clientId={process.env.REACT_APP_NAVER_CLIENT_ID || ""}
-                callbackUrl="http://127.0.0.1:3000/login?naver=true"
+                callbackUrl={process.env.REACT_APP_NAVER_CALLBACK_URL || ""}
                 onSuccess={naverOnSuccess}
                 onFailure={() => console.log("error")}
               />
@@ -178,7 +178,7 @@ export default () => {
             <ButtonBox>
               <NaverLogin
                 clientId={process.env.REACT_APP_NAVER_CLIENT_ID || ""}
-                callbackUrl="http://127.0.0.1:3000/login?naver=true"
+                callbackUrl={process.env.REACT_APP_NAVER_CALLBACK_URL || ""}
                 onSuccess={naverOnSuccess}
                 onFailure={() => console.log("error")}
               />
