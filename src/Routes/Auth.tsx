@@ -1,5 +1,4 @@
 import React, { useEffect } from "react";
-import qs from "query-string";
 import styled from "../Styles/index";
 import useInput from "../Hooks/useInput";
 import { Button, TextField } from "@material-ui/core";
@@ -7,7 +6,7 @@ import FacebookLogin, { ReactFacebookLoginInfo } from "react-facebook-login";
 import { GoogleLogin, GoogleLoginResponse, GoogleLoginResponseOffline } from "react-google-login";
 import KakaoLogin from "react-kakao-login";
 import NaverLogin from "../Components/NaverLogin";
-import { useLocation } from "react-router-dom";
+import { useLocation, Link } from "react-router-dom";
 import axios from "axios";
 import { NaverUser } from "../Components/NaverLogin";
 import Input from "../Components/Input";
@@ -40,7 +39,7 @@ const TitleBox = styled.div`
   padding: 8px;
 `;
 
-const Title = styled.span`
+const Title = styled(Link)`
   font-size: 26px;
   font-weight: 600;
   text-align: center;
@@ -109,7 +108,7 @@ export default () => {
       <FormBox>
         <Row>
           <TitleBox>
-            <Title>JJeoris</Title>
+            <Title to="/">JJeoris</Title>
           </TitleBox>
         </Row>
         <Row>

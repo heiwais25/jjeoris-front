@@ -4,7 +4,7 @@ import { Container } from "@material-ui/core";
 import { Plus, Shuffle, Profile } from "../Icons";
 import useInput from "../Hooks/useInput";
 import Input from "../Components/Input";
-import { useHistory } from "react-router-dom";
+import { useHistory, Link } from "react-router-dom";
 
 const ContainerWrapper = styled.div`
   width: 100%;
@@ -26,10 +26,11 @@ const Row = styled.div`
   padding: 8px;
 `;
 
-const Title = styled.span`
+const Title = styled(Link)`
   font-size: 24px;
   font-weight: 600;
   padding-right: 16px;
+  color: inherit;
 `;
 
 const MenuItems = styled.div`
@@ -80,7 +81,7 @@ export default () => {
       <Container maxWidth="md">
         <ContentWrapper>
           <Row>
-            <Title>JJeoris</Title>
+            <Title to="/">JJeoris</Title>
             <MenuItems>
               <MenuItem>Browse</MenuItem>
               <MenuItem>Categories</MenuItem>
