@@ -1,15 +1,14 @@
-import React, { useEffect } from "react";
+import React from "react";
 import styled from "../Styles/index";
-import useInput from "../Hooks/useInput";
-import { Button, TextField } from "@material-ui/core";
-import FacebookLogin, { ReactFacebookLoginInfo } from "react-facebook-login";
 import { GoogleLogin, GoogleLoginResponse, GoogleLoginResponseOffline } from "react-google-login";
-import KakaoLogin from "react-kakao-login";
 import NaverLogin from "../Components/NaverLogin";
+import KakaoLogin from "../Components/KakaoLogin";
 import { useLocation, Link } from "react-router-dom";
 import axios from "axios";
 import { NaverUser } from "../Components/NaverLogin";
 import Input from "../Components/Input";
+import { faGoogle } from "@fortawesome/free-brands-svg-icons";
+import LoginButton from "../Components/LoginButton";
 
 const Container = styled.div`
   width: 100%;
@@ -55,19 +54,21 @@ const Text = styled.span``;
 
 const FormBox = styled.form`
   ${(props) => props.theme.whiteBox};
-  width: 400px;
+  width: 300px;
   padding: 8px;
 `;
 
 const Buttons = styled.div`
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  padding-bottom: 8px;
+  display: flex;
+  flex-direction: column;
 `;
 
 const ButtonBox = styled.div`
   display: flex;
   justify-content: center;
+  :not(:last-child) {
+    padding-bottom: 8px;
+  }
 `;
 
 const LinkSplitter = styled.div`
@@ -93,7 +94,6 @@ const ActionBox = styled.div``;
 export default () => {
   const location = useLocation();
   const googleOnSuccess = (res: GoogleLoginResponse | GoogleLoginResponseOffline) => {};
-  const facebookOnSuccess = (res: ReactFacebookLoginInfo) => {};
   const kakaoOnSuccess = (res: any) => {
     console.log(res);
   };
@@ -101,8 +101,10 @@ export default () => {
     console.log(user.email);
   };
 
-  const email = useInput("");
-  const password = useInput("");
+  const responseGoogle = (response: GoogleLoginResponse | GoogleLoginResponseOffline) => {
+    console.log(response);
+  };
+
   return (
     <Container>
       <FormBox>
@@ -113,45 +115,13 @@ export default () => {
         </Row>
         <Row>
           <DescriptionBox>
-            <Text>Start leading a word trends</Text>
+            <Text>너도 인싸가 될 수 있어</Text>
           </DescriptionBox>
-        </Row>
-        <Row>
-          <TextField
-            value={email.value}
-            onChange={(e) => email.setValue(e.currentTarget.value)}
-            placeholder="Email"
-            type="email"
-            label="Email"
-            variant="outlined"
-            fullWidth
-          />
-        </Row>
-        <Row>
-          <TextField
-            value={password.value}
-            onChange={(e) => password.setValue(e.currentTarget.value)}
-            placeholder="Password"
-            type="password"
-            label="password"
-            variant="outlined"
-            fullWidth
-          />
-        </Row>
-        <Row>
-          <Button fullWidth variant="contained" color="primary">
-            Sign In
-          </Button>
-        </Row>
-        <Row>
-          <LinkSplitter>
-            <LinkSplitterText>Or Sign In With</LinkSplitterText>
-          </LinkSplitter>
         </Row>
         <Row>
           <Buttons>
             <ButtonBox>
-              <NaverLogin
+              <KakaoLogin
                 clientId={process.env.REACT_APP_NAVER_CLIENT_ID || ""}
                 callbackUrl={process.env.REACT_APP_NAVER_CALLBACK_URL || ""}
                 onSuccess={naverOnSuccess}
@@ -167,32 +137,25 @@ export default () => {
               />
             </ButtonBox>
             <ButtonBox>
-              <NaverLogin
-                clientId={process.env.REACT_APP_NAVER_CLIENT_ID || ""}
-                callbackUrl={process.env.REACT_APP_NAVER_CALLBACK_URL || ""}
-                onSuccess={naverOnSuccess}
-                onFailure={() => console.log("error")}
-              />
-            </ButtonBox>
-            <ButtonBox>
-              <NaverLogin
-                clientId={process.env.REACT_APP_NAVER_CLIENT_ID || ""}
-                callbackUrl={process.env.REACT_APP_NAVER_CALLBACK_URL || ""}
-                onSuccess={naverOnSuccess}
-                onFailure={() => console.log("error")}
+              <GoogleLogin
+                clientId="60270099803-fj5h3c34e2lq15jsl08ce1aecpc9c3tb.apps.googleusercontent.com"
+                render={(renderProps) => (
+                  <LoginButton
+                    onClick={renderProps.onClick}
+                    disabled={renderProps.disabled}
+                    bgColor={"#4081ED"}
+                    icon={faGoogle}
+                    text={"구글로 로그인"}
+                  />
+                )}
+                buttonText="Login"
+                onSuccess={responseGoogle}
+                onFailure={responseGoogle}
+                cookiePolicy={"single_host_origin"}
               />
             </ButtonBox>
           </Buttons>
         </Row>
-        {/* <Row>
-          <KakaoLogin jsKey="kakao-js-key" onSuccess={kakaoOnSuccess} onFailure={kakaoOnSuccess} />
-        </Row>
-        <Row>
-          <GoogleLogin clientId="123" onSuccess={googleOnSuccess} onFailure={googleOnSuccess} />
-        </Row>
-        <Row>
-          <FacebookLogin appId="123" callback={facebookOnSuccess} />
-        </Row> */}
       </FormBox>
     </Container>
   );

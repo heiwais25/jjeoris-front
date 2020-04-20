@@ -63,7 +63,7 @@ const initLoginButton = (props: IProps) => {
   const naverLogin = new naver.LoginWithNaverId({
     callbackUrl,
     clientId,
-    isPopup: true,
+    isPopup: false,
     loginButton: { color: "green", type: 1, height: 40 },
     callbackHandle: true,
   });
@@ -92,15 +92,15 @@ const loadScript = (props: IProps) => {
   }
 };
 
-const NaverImageURL = "https://static.nid.naver.com/oauth/button_g.PNG?version=js-2.0.0";
+const NaverImageURL = "/imgages/kakao.png";
 
 const Container = styled.div`
   width: 100%;
   display: flex;
   align-items: center;
-  background-color: #1dc801;
+  background-color: #fbe300;
   border-radius: 4px;
-  color: white;
+  color: #3b1e1d;
   cursor: pointer;
 `;
 
@@ -113,8 +113,8 @@ const Icon = styled.div<IconProps>`
   background-repeat: no-repeat;
   background-position: center center;
   background-size: 30px 30px;
-  width: ${(props) => (props["data-size"] ? `${props["data-size"]}px` : "20px")};
-  height: ${(props) => (props["data-size"] ? `${props["data-size"]}px` : "20px")};
+  width: ${(props) => (props["data-size"] ? `${props["data-size"]}px` : "25px")};
+  height: ${(props) => (props["data-size"] ? `${props["data-size"]}px` : "25px")};
   border-radius: 50%;
 `;
 
@@ -135,14 +135,10 @@ const NaverFake = styled.div`
 `;
 
 export default (props: IProps) => {
-  React.useEffect(() => {
-    loadScript(props);
-  }, []);
-
   const ref = useRef<HTMLDivElement>(null);
 
   const onClick = () => {
-    (ref.current?.firstChild as HTMLDivElement).click();
+    // (ref.current?.firstChild as HTMLDivElement).click();
   };
 
   return (
@@ -150,10 +146,10 @@ export default (props: IProps) => {
       <IconBox>
         <Icon data-size={props.size} />
       </IconBox>
-      <Text>네이버로 로그인</Text>
-      <NaverFake ref={ref} id="naverIdLogin">
+      <Text>카카오로 로그인</Text>
+      {/* <NaverFake ref={ref} id="naverIdLogin">
         12313
-      </NaverFake>
+      </NaverFake> */}
     </Container>
   );
 };
