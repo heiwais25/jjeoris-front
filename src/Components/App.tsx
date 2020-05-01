@@ -16,8 +16,11 @@ export default () => (
       <BrowserRouter>
         <Router />
         {/* <Footer /> */}
+        <ToastContainer
+          enableMultiContainer
+          position={toast.POSITION.BOTTOM_LEFT}
+        />
       </BrowserRouter>
-      <ToastContainer position={toast.POSITION.BOTTOM_LEFT} />
     </ThemeProvider>
   </MaterialThemeProvider>
 );

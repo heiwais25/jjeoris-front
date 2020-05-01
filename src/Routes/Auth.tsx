@@ -1,14 +1,11 @@
-import React from "react";
+import React, { useEffect } from "react";
 import styled from "../Styles/index";
-import { GoogleLogin, GoogleLoginResponse, GoogleLoginResponseOffline } from "react-google-login";
-import NaverLogin from "../Components/NaverLogin";
-import KakaoLogin from "../Components/KakaoLogin";
-import { useLocation, Link } from "react-router-dom";
-import axios from "axios";
-import { NaverUser } from "../Components/NaverLogin";
-import Input from "../Components/Input";
-import { faGoogle } from "@fortawesome/free-brands-svg-icons";
-import LoginButton from "../Components/LoginButton";
+import { Link, useHistory } from "react-router-dom";
+import SignInButton from "../Components/SignInButton";
+import { ISuccessArgs } from "../Components/SignInButton/SignInButton";
+import { useDispatch, useSelector } from "react-redux";
+import { signIn } from "../Slices/auth";
+import { authSelector } from "../Slices";
 
 const Container = styled.div`
   width: 100%;
@@ -71,39 +68,23 @@ const ButtonBox = styled.div`
   }
 `;
 
-const LinkSplitter = styled.div`
-  width: 100%;
-  text-align: center;
-  border-bottom: 1px solid ${(props) => props.theme.greyColor};
-  line-height: 0.1em;
-  margin: 10px 0 20px;
-`;
-
-const LinkSplitterText = styled.span`
-  background: #fff;
-  padding: 0 10px;
-  color: ${(props) => props.theme.greyColor};
-`;
-
-const Kakao = styled.div``;
-
-const Form = styled.div``;
-
-const ActionBox = styled.div``;
-
 export default () => {
-  const location = useLocation();
-  const googleOnSuccess = (res: GoogleLoginResponse | GoogleLoginResponseOffline) => {};
-  const kakaoOnSuccess = (res: any) => {
-    console.log(res);
-  };
-  const naverOnSuccess = (user: NaverUser) => {
-    console.log(user.email);
+  const dispatch = useDispatch();
+  const history = useHistory();
+  const { isSignedIn, loading, user } = useSelector(authSelector);
+
+  const onSuccess = ({ name, email }: ISuccessArgs) => {
+    console.log(name, email);
+    dispatch(signIn(name, email));
   };
 
-  const responseGoogle = (response: GoogleLoginResponse | GoogleLoginResponseOffline) => {
-    console.log(response);
-  };
+  useEffect(() => {
+    if (isSignedIn) {
+      setTimeout(() => {
+        history.push("/");
+      }, 2000);
+    }
+  }, [isSignedIn]);
 
   return (
     <Container>
@@ -121,38 +102,13 @@ export default () => {
         <Row>
           <Buttons>
             <ButtonBox>
-              <KakaoLogin
-                clientId={process.env.REACT_APP_NAVER_CLIENT_ID || ""}
-                callbackUrl={process.env.REACT_APP_NAVER_CALLBACK_URL || ""}
-                onSuccess={naverOnSuccess}
-                onFailure={() => console.log("error")}
-              />
+              <SignInButton type="kakao" onSuccess={onSuccess} />
             </ButtonBox>
             <ButtonBox>
-              <NaverLogin
-                clientId={process.env.REACT_APP_NAVER_CLIENT_ID || ""}
-                callbackUrl={process.env.REACT_APP_NAVER_CALLBACK_URL || ""}
-                onSuccess={naverOnSuccess}
-                onFailure={() => console.log("error")}
-              />
+              <SignInButton type="naver" onSuccess={onSuccess} />
             </ButtonBox>
             <ButtonBox>
-              <GoogleLogin
-                clientId="60270099803-fj5h3c34e2lq15jsl08ce1aecpc9c3tb.apps.googleusercontent.com"
-                render={(renderProps) => (
-                  <LoginButton
-                    onClick={renderProps.onClick}
-                    disabled={renderProps.disabled}
-                    bgColor={"#4081ED"}
-                    icon={faGoogle}
-                    text={"구글로 로그인"}
-                  />
-                )}
-                buttonText="Login"
-                onSuccess={responseGoogle}
-                onFailure={responseGoogle}
-                cookiePolicy={"single_host_origin"}
-              />
+              <SignInButton type="google" onSuccess={onSuccess} />
             </ButtonBox>
           </Buttons>
         </Row>
