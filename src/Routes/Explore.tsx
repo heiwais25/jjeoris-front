@@ -21,7 +21,6 @@ const Row = styled.div`
 export default () => {
   return (
     <>
-      <Header />
       <ContainerWrapper>
         <Container maxWidth="md">
           <ContentWrapper>

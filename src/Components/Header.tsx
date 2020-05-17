@@ -5,6 +5,7 @@ import { Plus, Shuffle, Profile } from "../Icons";
 import useInput from "../Hooks/useInput";
 import Input from "../Components/Input";
 import { useHistory, Link } from "react-router-dom";
+import { ROUTE_PATH } from "../constants";
 
 const ContainerWrapper = styled.div`
   width: 100%;
@@ -104,7 +105,7 @@ export default () => {
               <Icon>
                 <Shuffle size={20} />
               </Icon>
-              <Icon onClick={() => history.push("signin")}>
+              <Icon onClick={() => history.push(ROUTE_PATH.SIGN_IN)}>
                 <Profile size={16} />
               </Icon>
             </Icons>

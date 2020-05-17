@@ -78,6 +78,10 @@ export default () => {
     dispatch(signIn(name, email));
   };
 
+  // 이미 로그인했다면 Main page로 이동
+
+  // 새롭게 로그인한 경우 Main Page로 이동
+
   useEffect(() => {
     if (isSignedIn) {
       setTimeout(() => {
