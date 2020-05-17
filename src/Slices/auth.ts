@@ -1,6 +1,9 @@
 import { createSlice, PayloadAction, Dispatch } from "@reduxjs/toolkit";
 import axios from "axios";
-import { setAccessToken } from "../Service/localStorageService";
+import {
+  setAccessToken,
+  clearAccessToken,
+} from "../Service/localStorageService";
 
 export type IUserInfo = {
   email: string;
@@ -48,6 +51,7 @@ const authSlice = createSlice({
       state.isSignedIn = true;
     },
     setSignedOut: (state) => {
+      clearAccessToken();
       state.isSignedIn = false;
     },
     getUserInfoSuccess: (state, action: PayloadAction<{ user: IUserInfo }>) => {
@@ -64,27 +68,28 @@ export const {
   signInFailure,
 } = authSlice.actions;
 export default authSlice.reducer;
+
 export function signIn(username: string, email: string) {
   return async (dispatch: Dispatch) => {
     dispatch(signInStatrt());
 
     try {
       // console.log("hi");
-      // const response = await axios.post("/user", {
-      //   username: username,
-      //   email: email,
-      // });
-      // dispatch(signInSuccess(response.data));
-      console.log("here");
-      dispatch(
-        signInSuccess({
-          token: "123",
-          user: {
-            username: "qwe",
-            email: "qwe",
-          },
-        })
-      );
+      const response = await axios.post("/user", {
+        username: username,
+        email: email,
+      });
+      dispatch(signInSuccess(response.data));
+      // console.log("here");
+      // dispatch(
+      //   signInSuccess({
+      //     token: "123",
+      //     user: {
+      //       username: "qwe",
+      //       email: "qwe",
+      //     },
+      //   })
+      // );
     } catch (error) {
       dispatch(signInFailure());
     }

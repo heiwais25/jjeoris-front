@@ -34,7 +34,7 @@ export default () => {
           <Route exact path="/" component={Explore} />
 
           {/* Auth Pages */}
-          <Route exact path="/auth/signin" component={SignIn} />
+          <Route path="/auth/signin" component={SignIn} />
           <Redirect path="*" to="/" />
         </Switch>
       </ContentWrapper>
