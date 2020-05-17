@@ -1,11 +1,12 @@
 import React from "react";
-import styled from "../Styles/index";
-import { Container } from "@material-ui/core";
-import { Plus, Shuffle, Profile } from "../Icons";
-import useInput from "../Hooks/useInput";
-import Input from "../Components/Input";
+import styled from "../../Styles";
+import { Container, Popover } from "@material-ui/core";
+import { Plus, Shuffle, Profile } from "../../Icons";
+import { IInput } from "../../Hooks/useInput";
+import Input from "../../Components/Input";
 import { useHistory, Link } from "react-router-dom";
-import { ROUTE_PATH } from "../constants";
+import { ROUTE_PATH } from "../../constants";
+import ProfilePopover from "./ProfilePopover";
 
 const ContainerWrapper = styled.div`
   width: 100%;
@@ -73,10 +74,26 @@ const Icon = styled.div`
   }
 `;
 
-export default () => {
-  const search = useInput("");
-  const history = useHistory();
+type IProps = {
+  search: IInput;
+  moveToSignIn: () => void;
+  signOut: () => void;
+  openProfilePopOver: (event: React.MouseEvent<HTMLDivElement>) => void;
+  closeProfilePopOver: () => void;
+  profilePopOverAnchor: HTMLDivElement | null;
+  isSignedIn: boolean;
+};
 
+export default ({
+  search,
+  moveToSignIn,
+  openProfilePopOver,
+  closeProfilePopOver,
+  profilePopOverAnchor,
+  signOut,
+  isSignedIn,
+}: IProps) => {
+  console.log(isSignedIn);
   return (
     <ContainerWrapper>
       <Container maxWidth="md">
@@ -105,9 +122,16 @@ export default () => {
               <Icon>
                 <Shuffle size={20} />
               </Icon>
-              <Icon onClick={() => history.push(ROUTE_PATH.SIGN_IN)}>
+              <Icon
+                onClick={isSignedIn ? openProfilePopOver : () => moveToSignIn()}
+              >
                 <Profile size={16} />
               </Icon>
+              <ProfilePopover
+                signOut={signOut}
+                closeProfilePopOver={closeProfilePopOver}
+                profilePopOverAnchor={profilePopOverAnchor}
+              />
             </Icons>
           </Row>
         </ContentWrapper>

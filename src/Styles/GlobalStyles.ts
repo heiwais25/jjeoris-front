@@ -8,9 +8,9 @@ export default createGlobalStyle`
         box-sizing: border-box;
     }
     body {
-        background-color:${props => props.theme.bgColor};
-        color:${props => props.theme.blackColor};
-        font-size:14px;
+        background-color:${(props) => props.theme.bgColor};
+        color:${(props) => props.theme.blackColor};
+        font-size:12px;
         font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
         padding-top: 0px;
         height: 100%;
@@ -22,7 +22,7 @@ export default createGlobalStyle`
         height: 100%;
     }
     a {
-        color:${props => props.theme.blueColor};
+        color:${(props) => props.theme.blueColor};
         text-decoration:none;
         outline: none !important;
     }

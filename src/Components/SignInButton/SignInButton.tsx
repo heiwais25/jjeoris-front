@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import styled from "../../Styles";
 import NaverLogin, { NaverUser } from "react-naver-login";
 import {
@@ -9,8 +9,17 @@ import {
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faGoogle } from "@fortawesome/free-brands-svg-icons";
 import { Naver, Kakao } from "../../Icons";
-import KakaoLogin from "react-kakao-login";
-import { KakaoLoginResponseV2 } from "react-kakao-login/dist/types";
+import KakaoSingInButton from "./KakaoSingInButton";
+import { useHistory, useLocation } from "react-router-dom";
+import qs from "query-string";
+import {
+  setOAtuhAccessToken,
+  getOAtuhAccessToken,
+} from "../../Service/localStorageService";
+import useKakao from "../../Hooks/useKakao";
+import { ITokenProvider } from "../../Service/localStorageService";
+import SignInButtonPresenter from "./SignInButtonPresenter";
+import axios from "axios";
 
 const Container = styled.div`
   width: 100%;
@@ -93,6 +102,8 @@ export default ({ type, onSuccess }: IProps) => {
     onSuccess({ name: res.name, email: res.email });
   };
 
+  const { initialized } = useKakao();
+
   const onSuccessGoogle = (
     origResponse: GoogleLoginResponse | GoogleLoginResponseOffline
   ) => {
@@ -104,10 +115,53 @@ export default ({ type, onSuccess }: IProps) => {
     });
   };
 
-  const onSuccessKakao = (origResponse: KakaoLoginResponseV2) => {
-    // TODO : Kakao Require Buisness Setting
-    console.log(origResponse.profile.kakao_account.email);
-  };
+  // const onSuccessKakao = (origResponse: KakaoLoginResponseV2) => {
+  //   // TODO : Kakao Require Buisness Setting
+  //   console.log(origResponse.profile.kakao_account.email);
+  // };
+
+  const location = useLocation();
+  useEffect(() => {
+    const { pathname } = location;
+    // Process kakao redirect
+    if (initialized) {
+      if (pathname.includes("kakao")) {
+        console.log(initialized);
+        const { code } = qs.parse(location.search) as { code?: string };
+        if (!code) {
+          // Go to main page
+        } else {
+          setOAtuhAccessToken("kakao", code);
+        }
+
+        //         GET/POST /v2/user/me HTTP/1.1
+        // Host: kapi.kakao.com
+        // Authorization: Bearer {access_token}
+        // Content-type: application/x-www-form-urlencoded;charset=utf-8
+
+        console.log(window.Kakao.Auth);
+        const token = getOAtuhAccessToken("kakao");
+        // axios
+        //   .get("https://kapi.kakao.com/v2/user/me", {
+        //     headers: {
+        //       Authorization: `Bearer ${token}`,
+        //     },
+        //   })
+        //   .then((res) => console.log(res))
+        //   .catch((err) => console.log(err));
+
+        window.Kakao.API.request({
+          url: "/v2/user/me",
+          success: function (response) {
+            console.log(response);
+          },
+          fail: function (error) {
+            console.log(error);
+          },
+        });
+      }
+    }
+  }, [location.pathname, initialized]);
 
   const renderButton = (onClick: () => void) => (
     <ButtonWrapper
@@ -124,17 +178,12 @@ export default ({ type, onSuccess }: IProps) => {
     </ButtonWrapper>
   );
 
+  const { signIn } = useKakao();
+
   return (
     <Container>
       {type === "kakao" && (
-        <KakaoLogin
-          jsKey={process.env.REACT_APP_KAKAO_CLIENT_ID || ""}
-          onSuccess={onSuccessKakao}
-          onFailure={(result) => console.log(result)}
-          getProfile={true}
-          throughTalk={true}
-          render={(props) => renderButton(props.onClick)}
-        />
+        <SignInButtonPresenter onClick={signIn} type={type} />
       )}
       {type === "naver" && (
         <NaverLogin
