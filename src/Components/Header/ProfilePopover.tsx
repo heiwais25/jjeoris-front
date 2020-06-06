@@ -2,9 +2,11 @@ import React from "react";
 import { Popover } from "@material-ui/core";
 import styled from "../../Styles";
 import SignOutButton from "../SignOutButton";
+import { useDispatch } from "react-redux";
+import Button from "../Button";
+import { signOut } from "../../Slices/auth";
 
 type IProps = {
-  signOut: () => void;
   closeProfilePopOver: () => void;
   profilePopOverAnchor: HTMLDivElement | null;
 };
@@ -43,9 +45,16 @@ const Text = styled.span`
   text-align: center;
 `;
 
-export default ({ profilePopOverAnchor, closeProfilePopOver, signOut }: IProps) => {
+export default ({ profilePopOverAnchor, closeProfilePopOver }: IProps) => {
   const open = Boolean(profilePopOverAnchor);
   const id = open ? "simple-popover" : undefined;
+  const dispatch = useDispatch();
+
+  const handleSignOut = () => {
+    closeProfilePopOver();
+    dispatch(signOut());
+  };
+
   return (
     <Popover
       disableScrollLock
@@ -78,7 +87,7 @@ export default ({ profilePopOverAnchor, closeProfilePopOver, signOut }: IProps) 
             </DescriptionContainer>
           </Row>
           <Row>
-            <SignOutButton />
+            <Button text="로그아웃" onClick={handleSignOut} />
           </Row>
         </Wrapper>
       </Container>

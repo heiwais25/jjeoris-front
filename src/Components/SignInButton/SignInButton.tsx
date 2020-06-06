@@ -1,16 +1,16 @@
-import React, { useEffect } from "react";
+import React from "react";
 import styled from "../../Styles";
 import NaverLogin, { NaverUser } from "react-naver-login";
 import { GoogleLogin, GoogleLoginResponse, GoogleLoginResponseOffline } from "react-google-login";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faGoogle } from "@fortawesome/free-brands-svg-icons";
 import { Naver, Kakao } from "../../Icons";
-import { useLocation } from "react-router-dom";
-import qs from "query-string";
-import { setOAtuhAccessToken } from "../../Service/localStorageService";
+import { useHistory } from "react-router-dom";
 import useKakao from "../../Hooks/useKakao";
 import SignInButtonPresenter from "./SignInButtonPresenter";
 import { toast } from "react-toastify";
+import { signIn } from "../../Slices/auth";
+import { useDispatch } from "react-redux";
 
 const Container = styled.div`
   width: 100%;
@@ -89,6 +89,9 @@ const buttonIcons: { [key in OAuthType]: JSX.Element } = {
 };
 
 export default ({ type, onSuccess }: IProps) => {
+  const history = useHistory();
+  const dispatch = useDispatch();
+
   const onSuccessNaver = (res: NaverUser) => {
     onSuccess({ name: res.name, email: res.email });
   };
@@ -109,58 +112,6 @@ export default ({ type, onSuccess }: IProps) => {
   //   console.log(origResponse.profile.kakao_account.email);
   // };
 
-  const location = useLocation();
-  useEffect(() => {
-    const { pathname } = location;
-    if (initialized) {
-      // Process kakao redirect
-      if (pathname.includes("kakao")) {
-        const { code } = qs.parse(location.search) as { code?: string };
-        if (!code) {
-          // Go to main page
-        } else {
-          setOAtuhAccessToken("kakao", code);
-          window.Kakao.Auth.setAccessToken(code);
-          window.Kakao.API.request({
-            url: "/v2/user/me",
-            success: function (response) {
-              console.log(response);
-            },
-            fail: function (error) {
-              console.log(error);
-            },
-          });
-        }
-
-        //         GET/POST /v2/user/me HTTP/1.1
-        // Host: kapi.kakao.com
-        // Authorization: Bearer {access_token}
-        // Content-type: application/x-www-form-urlencoded;charset=utf-8
-
-        // Get access token
-
-        // axios
-        //   .get("https://kapi.kakao.com/v2/user/me", {
-        //     headers: {
-        //       Authorization: `Bearer ${token}`,
-        //     },
-        //   })
-        //   .then((res) => console.log(res))
-        //   .catch((err) => console.log(err));
-
-        // window.Kakao.API.request({
-        //   url: "/v2/user/me",
-        //   success: function (response) {
-        //     console.log(response);
-        //   },
-        //   fail: function (error) {
-        //     console.log(error);
-        //   },
-        // });
-      }
-    }
-  }, [location, initialized]);
-
   const renderButton = (onClick: () => void) => (
     <ButtonWrapper
       onClick={onClick}
@@ -176,7 +127,7 @@ export default ({ type, onSuccess }: IProps) => {
     </ButtonWrapper>
   );
 
-  const { signIn } = useKakao();
+  const { signIn: kakaoSignIn } = useKakao();
 
   const handleSignIn = (type: OAuthType) => async () => {
     try {
@@ -184,14 +135,18 @@ export default ({ type, onSuccess }: IProps) => {
       let email: string = "";
 
       if (type === "kakao") {
-        const result = await signIn();
+        const result = await kakaoSignIn();
         name = result.kakao_account.profile.nickname;
         email = result.kakao_account.email;
       }
 
       if (!!name && !!email) {
         console.log(name, email);
-        toast.success("로그인에 성공하였습니다.");
+
+        dispatch(signIn(name, email));
+        toast.success("로그인에 성공하였습니다. 메인 페이지로 이동합니다");
+        setTimeout(() => history.push("/"), 2000);
+        // Go to the main server
       }
     } catch (err) {
       console.log(err);
