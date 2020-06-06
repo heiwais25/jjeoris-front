@@ -76,7 +76,6 @@ const Icon = styled.div`
 type IProps = {
   search: IInput;
   moveToSignIn: () => void;
-  signOut: () => void;
   openProfilePopOver: (event: React.MouseEvent<HTMLDivElement>) => void;
   closeProfilePopOver: () => void;
   profilePopOverAnchor: HTMLDivElement | null;
@@ -89,10 +88,8 @@ export default ({
   openProfilePopOver,
   closeProfilePopOver,
   profilePopOverAnchor,
-  signOut,
   isSignedIn,
 }: IProps) => {
-  console.log(isSignedIn);
   return (
     <ContainerWrapper>
       <Container maxWidth="md">
@@ -125,7 +122,6 @@ export default ({
                 <Profile size={16} />
               </Icon>
               <ProfilePopover
-                signOut={signOut}
                 closeProfilePopOver={closeProfilePopOver}
                 profilePopOverAnchor={profilePopOverAnchor}
               />

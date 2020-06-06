@@ -25,13 +25,10 @@ export default () => {
     history.push(ROUTE_PATH.SIGN_IN);
   };
 
-  const signOut = () => {};
-
   return (
     <>
       <HeaderPresenter
         search={search}
-        signOut={signOut}
         moveToSignIn={moveToSignIn}
         openProfilePopOver={openProfilePopOver}
         closeProfilePopOver={closeProfilePopOver}

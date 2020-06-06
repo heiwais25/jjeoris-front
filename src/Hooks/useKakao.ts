@@ -84,7 +84,7 @@ export default () => {
               },
             });
           },
-          scope: "account_email",
+          scope: "account_email,profile",
         });
       }
     });

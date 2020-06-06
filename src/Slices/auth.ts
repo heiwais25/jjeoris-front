@@ -1,9 +1,6 @@
 import { createSlice, PayloadAction, Dispatch } from "@reduxjs/toolkit";
 import axios from "axios";
-import {
-  setAccessToken,
-  clearAccessToken,
-} from "../Service/localStorageService";
+import { setAccessToken, clearAccessToken } from "../Service/localStorageService";
 
 export type IUserInfo = {
   email: string;
@@ -33,14 +30,13 @@ const authSlice = createSlice({
     signInStatrt: (state) => {
       state.loading = true;
     },
-    signInSuccess: (
-      state,
-      action: PayloadAction<{ token: string; user: IUserInfo }>
-    ) => {
-      const { token, user } = action.payload;
-      // parse token
-      setAccessToken(token);
+    signInFinish: (state) => {
       state.loading = false;
+    },
+    signInSuccess: (state, action: PayloadAction<{ token: string; user: IUserInfo }>) => {
+      const { token, user } = action.payload;
+      // Save token
+      setAccessToken(token);
       state.isSignedIn = true;
       state.user = user;
     },
@@ -66,6 +62,7 @@ export const {
   signInStatrt,
   signInSuccess,
   signInFailure,
+  signInFinish,
 } = authSlice.actions;
 export default authSlice.reducer;
 
@@ -74,24 +71,24 @@ export function signIn(username: string, email: string) {
     dispatch(signInStatrt());
 
     try {
-      // console.log("hi");
-      const response = await axios.post("/user", {
-        username: username,
-        email: email,
-      });
-      dispatch(signInSuccess(response.data));
-      // console.log("here");
-      // dispatch(
-      //   signInSuccess({
-      //     token: "123",
-      //     user: {
-      //       username: "qwe",
-      //       email: "qwe",
-      //     },
-      //   })
-      // );
+      // Process login with real data
+      // const response = await axios.post("/user", {
+      //   username: username,
+      //   email: email,
+      // });
+
+      const userInfo: IUserInfo = {
+        email,
+        username,
+      };
+
+      const token = "123";
+
+      dispatch(signInSuccess({ token, user: userInfo }));
     } catch (error) {
       dispatch(signInFailure());
+    } finally {
+      dispatch(signInFinish());
     }
   };
 }
@@ -103,6 +100,26 @@ export function getUserInfo() {
       dispatch(signInSuccess(response.data));
     } catch (error) {
       dispatch(signInFailure());
+    }
+  };
+}
+
+export function signOut() {
+  return async (dispatch: Dispatch) => {
+    try {
+      window.Kakao.API.request({
+        url: "/v1/user/unlink",
+        success: function (res) {
+          console.log("Success to logout");
+        },
+        fail: function (err) {
+          console.log("Fail to logout", err);
+        },
+      });
+    } catch (err) {
+      console.log("error", err);
+    } finally {
+      dispatch(setSignedOut());
     }
   };
 }
