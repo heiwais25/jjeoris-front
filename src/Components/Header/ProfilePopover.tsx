@@ -1,7 +1,6 @@
 import React from "react";
 import { Popover } from "@material-ui/core";
 import styled from "../../Styles";
-import SignOutButton from "../SignOutButton";
 import { useDispatch } from "react-redux";
 import Button from "../Button";
 import { signOut } from "../../Slices/auth";
