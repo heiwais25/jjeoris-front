@@ -1,7 +1,6 @@
 import React from "react";
 import styled from "../Styles/index";
 import Card from "../Components/Card";
-import Header from "../Components/Header";
 import { Container } from "@material-ui/core";
 
 const ContainerWrapper = styled.div`

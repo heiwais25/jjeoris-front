@@ -1,25 +1,16 @@
 import React, { useEffect } from "react";
 import styled from "../../Styles";
 import NaverLogin, { NaverUser } from "react-naver-login";
-import {
-  GoogleLogin,
-  GoogleLoginResponse,
-  GoogleLoginResponseOffline,
-} from "react-google-login";
+import { GoogleLogin, GoogleLoginResponse, GoogleLoginResponseOffline } from "react-google-login";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faGoogle } from "@fortawesome/free-brands-svg-icons";
 import { Naver, Kakao } from "../../Icons";
-import KakaoSingInButton from "./KakaoSingInButton";
-import { useHistory, useLocation } from "react-router-dom";
+import { useLocation } from "react-router-dom";
 import qs from "query-string";
-import {
-  setOAtuhAccessToken,
-  getOAtuhAccessToken,
-} from "../../Service/localStorageService";
+import { setOAtuhAccessToken } from "../../Service/localStorageService";
 import useKakao from "../../Hooks/useKakao";
-import { ITokenProvider } from "../../Service/localStorageService";
 import SignInButtonPresenter from "./SignInButtonPresenter";
-import axios from "axios";
+import { toast } from "react-toastify";
 
 const Container = styled.div`
   width: 100%;
@@ -104,9 +95,7 @@ export default ({ type, onSuccess }: IProps) => {
 
   const { initialized } = useKakao();
 
-  const onSuccessGoogle = (
-    origResponse: GoogleLoginResponse | GoogleLoginResponseOffline
-  ) => {
+  const onSuccessGoogle = (origResponse: GoogleLoginResponse | GoogleLoginResponseOffline) => {
     let response = (origResponse as unknown) as GoogleLoginResponse;
     // Get id, name
     onSuccess({
@@ -123,15 +112,24 @@ export default ({ type, onSuccess }: IProps) => {
   const location = useLocation();
   useEffect(() => {
     const { pathname } = location;
-    // Process kakao redirect
     if (initialized) {
+      // Process kakao redirect
       if (pathname.includes("kakao")) {
-        console.log(initialized);
         const { code } = qs.parse(location.search) as { code?: string };
         if (!code) {
           // Go to main page
         } else {
           setOAtuhAccessToken("kakao", code);
+          window.Kakao.Auth.setAccessToken(code);
+          window.Kakao.API.request({
+            url: "/v2/user/me",
+            success: function (response) {
+              console.log(response);
+            },
+            fail: function (error) {
+              console.log(error);
+            },
+          });
         }
 
         //         GET/POST /v2/user/me HTTP/1.1
@@ -139,8 +137,8 @@ export default ({ type, onSuccess }: IProps) => {
         // Authorization: Bearer {access_token}
         // Content-type: application/x-www-form-urlencoded;charset=utf-8
 
-        console.log(window.Kakao.Auth);
-        const token = getOAtuhAccessToken("kakao");
+        // Get access token
+
         // axios
         //   .get("https://kapi.kakao.com/v2/user/me", {
         //     headers: {
@@ -150,18 +148,18 @@ export default ({ type, onSuccess }: IProps) => {
         //   .then((res) => console.log(res))
         //   .catch((err) => console.log(err));
 
-        window.Kakao.API.request({
-          url: "/v2/user/me",
-          success: function (response) {
-            console.log(response);
-          },
-          fail: function (error) {
-            console.log(error);
-          },
-        });
+        // window.Kakao.API.request({
+        //   url: "/v2/user/me",
+        //   success: function (response) {
+        //     console.log(response);
+        //   },
+        //   fail: function (error) {
+        //     console.log(error);
+        //   },
+        // });
       }
     }
-  }, [location.pathname, initialized]);
+  }, [location, initialized]);
 
   const renderButton = (onClick: () => void) => (
     <ButtonWrapper
@@ -180,11 +178,30 @@ export default ({ type, onSuccess }: IProps) => {
 
   const { signIn } = useKakao();
 
+  const handleSignIn = (type: OAuthType) => async () => {
+    try {
+      let name: string = "";
+      let email: string = "";
+
+      if (type === "kakao") {
+        const result = await signIn();
+        name = result.kakao_account.profile.nickname;
+        email = result.kakao_account.email;
+      }
+
+      if (!!name && !!email) {
+        console.log(name, email);
+        toast.success("로그인에 성공하였습니다.");
+      }
+    } catch (err) {
+      console.log(err);
+      toast.error("로그인에 실패했습니다");
+    }
+  };
+
   return (
     <Container>
-      {type === "kakao" && (
-        <SignInButtonPresenter onClick={signIn} type={type} />
-      )}
+      {type === "kakao" && <SignInButtonPresenter onClick={handleSignIn(type)} type={type} />}
       {type === "naver" && (
         <NaverLogin
           clientId={process.env.REACT_APP_NAVER_CLIENT_ID || ""}

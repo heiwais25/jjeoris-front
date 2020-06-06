@@ -1,11 +1,10 @@
 import React from "react";
 import styled from "../../Styles";
-import { Container, Popover } from "@material-ui/core";
+import { Container } from "@material-ui/core";
 import { Plus, Shuffle, Profile } from "../../Icons";
 import { IInput } from "../../Hooks/useInput";
 import Input from "../../Components/Input";
-import { useHistory, Link } from "react-router-dom";
-import { ROUTE_PATH } from "../../constants";
+import { Link } from "react-router-dom";
 import ProfilePopover from "./ProfilePopover";
 
 const ContainerWrapper = styled.div`
@@ -122,9 +121,7 @@ export default ({
               <Icon>
                 <Shuffle size={20} />
               </Icon>
-              <Icon
-                onClick={isSignedIn ? openProfilePopOver : () => moveToSignIn()}
-              >
+              <Icon onClick={isSignedIn ? openProfilePopOver : () => moveToSignIn()}>
                 <Profile size={16} />
               </Icon>
               <ProfilePopover

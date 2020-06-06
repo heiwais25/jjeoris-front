@@ -1,9 +1,6 @@
 import React from "react";
 import { Popover } from "@material-ui/core";
-import Button from "../Button";
-import { IInput } from "../../Hooks/useInput";
 import styled from "../../Styles";
-import { Profile } from "../../Icons";
 import SignOutButton from "../SignOutButton";
 
 type IProps = {
@@ -46,11 +43,7 @@ const Text = styled.span`
   text-align: center;
 `;
 
-export default ({
-  profilePopOverAnchor,
-  closeProfilePopOver,
-  signOut,
-}: IProps) => {
+export default ({ profilePopOverAnchor, closeProfilePopOver, signOut }: IProps) => {
   const open = Boolean(profilePopOverAnchor);
   const id = open ? "simple-popover" : undefined;
   return (

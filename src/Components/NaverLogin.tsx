@@ -63,7 +63,7 @@ const initLoginButton = (props: IProps) => {
   const naverLogin = new naver.LoginWithNaverId({
     callbackUrl,
     clientId,
-    isPopup: true,
+    isPopup: false,
     loginButton: { color: "green", type: 1, height: 40 },
     callbackHandle: true,
   });

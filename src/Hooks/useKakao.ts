@@ -1,5 +1,14 @@
 import { useEffect, useState, useCallback } from "react";
 
+export type LoginResponse = {
+  kakao_account: {
+    email: string;
+    profile: {
+      nickname: string;
+    };
+  };
+};
+
 declare global {
   interface Window {
     Kakao: {
@@ -12,6 +21,7 @@ declare global {
           throughTalk?: boolean;
           scope?: string;
         }) => void;
+        setAccessToken: (token: string) => void;
         cleanup: () => void;
         createLoginButton: (options: {
           container?: string | HTMLElement;
@@ -24,13 +34,13 @@ declare global {
           scope?: string;
         }) => void;
         login: (option: {
-          success?: () => void;
+          success?: (res: any) => void;
           fail?: () => void;
           always?: () => void;
           persistAccessToken?: boolean;
           persistRefreshToken?: boolean;
           throughTalk?: boolean;
-          scope: string;
+          scope?: string;
         }) => void;
         logout: (cb?: () => void) => void;
         getStatusInfo: (cb?: () => void) => void;
@@ -59,15 +69,26 @@ export default () => {
       }
       setInitialized(true);
     }
-  }, [initialized]);
+  }, [Kakao, initialized]);
 
   const signIn = useCallback(() => {
-    if (initialized) {
-      Kakao.Auth.authorize({
-        redirectUri: "http://localhost:3000/auth/signin/kakao",
-      });
-    }
-  }, [initialized]);
+    return new Promise<LoginResponse>((res, rej) => {
+      if (initialized) {
+        Kakao.Auth.login({
+          success: (response: any) => {
+            Kakao.API.request({
+              url: "/v2/user/me",
+              success: (profile) => {
+                console.log("Here", profile);
+                res(JSON.parse(JSON.stringify(profile)) as LoginResponse);
+              },
+            });
+          },
+          scope: "account_email",
+        });
+      }
+    });
+  }, [Kakao, initialized]);
 
   const signOut = useCallback(
     (cb?: () => void) => {
@@ -75,7 +96,7 @@ export default () => {
         Kakao.Auth.logout(cb);
       }
     },
-    [initialized]
+    [Kakao, initialized]
   );
 
   return { initialized, signIn, signOut };

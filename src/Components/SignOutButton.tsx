@@ -5,10 +5,7 @@ import useKakao from "../Hooks/useKakao";
 import { useDispatch } from "react-redux";
 import { setSignedOut } from "../Slices/auth";
 
-const Container = styled.div``;
-
 export default () => {
-  const { signOut } = useKakao();
   const dispatch = useDispatch();
 
   const handleClick = () => {
