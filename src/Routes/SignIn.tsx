@@ -71,7 +71,7 @@ const ButtonBox = styled.div`
 export default () => {
   const dispatch = useDispatch();
   const history = useHistory();
-  const { isSignedIn, loading, user } = useSelector(authSelector);
+  const { isSignedIn } = useSelector(authSelector);
 
   const onSuccess = ({ name, email }: ISuccessArgs) => {
     console.log(name, email);

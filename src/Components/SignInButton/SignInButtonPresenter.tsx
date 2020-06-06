@@ -1,20 +1,8 @@
-import React, { useEffect } from "react";
+import React from "react";
 import styled from "../../Styles";
-import NaverLogin, { NaverUser } from "react-naver-login";
-import {
-  GoogleLogin,
-  GoogleLoginResponse,
-  GoogleLoginResponseOffline,
-} from "react-google-login";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faGoogle } from "@fortawesome/free-brands-svg-icons";
 import { Naver, Kakao } from "../../Icons";
-import KakaoSingInButton from "./KakaoSingInButton";
-import { useHistory, useLocation } from "react-router-dom";
-import qs from "query-string";
-import { setOAtuhAccessToken } from "../../Service/localStorageService";
-import useKakao from "../../Hooks/useKakao";
-import { ITokenProvider } from "../../Service/localStorageService";
 
 type IWrapperProps = {
   "data-bgcolor": string;
