@@ -1,16 +1,15 @@
-import React, { useEffect } from "react";
+import React from "react";
 import styled from "../Styles/index";
 import { Link, useHistory } from "react-router-dom";
-import SignInButton from "../Components/SignInButton";
 import { ISuccessArgs } from "../Components/SignInButton/SignInButton";
 import { useDispatch, useSelector } from "react-redux";
 import { signIn } from "../Slices/auth";
 import { authSelector } from "../Slices";
 import { toast } from "react-toastify";
 import NaverSignInButton from "../Components/SignInButton/NaverSignInButton";
-import { Kakao } from "../Icons";
 import KakaoSignInButton from "../Components/SignInButton/KakaoSignInButton";
 import GoogleSignInButton from "../Components/SignInButton/GoogleSignInButton";
+import { useEffect, useCallback } from "react";
 
 const Container = styled.div`
   width: 100%;
@@ -76,20 +75,27 @@ const ButtonBox = styled.div`
 export default () => {
   const dispatch = useDispatch();
   const history = useHistory();
+
   const { isSignedIn } = useSelector(authSelector);
+
+  const onSuccessRouting = useCallback(() => history.push("/"), [history]);
+
+  // TODO : Routing에서 아예 현재 Routing에 접근하지 못하도록 할 수 있는가?
+  useEffect(() => {
+    // User Already Login and Get Access Token
+    if (isSignedIn) {
+      onSuccessRouting();
+    }
+  }, [isSignedIn, onSuccessRouting]);
 
   const onSuccess = ({ name, email }: ISuccessArgs) => {
     console.log(name, email);
-    dispatch(signIn(name, email, () => history.push("/")));
+    dispatch(signIn(name, email, onSuccessRouting));
   };
 
   const onFailure = () => {
     toast.error("로그인을 실패햇습니다.");
   };
-
-  // 이미 로그인했다면 Main page로 이동
-
-  // 새롭게 로그인한 경우 Main Page로 이동
 
   return (
     <Container>
@@ -115,12 +121,6 @@ export default () => {
             <ButtonBox>
               <GoogleSignInButton onSuccess={onSuccess} onFailure={onFailure} />
             </ButtonBox>
-            {/* <ButtonBox>
-              <SignInButton type="naver" onSuccess={onSuccess} onFailure={onFailure} />
-            </ButtonBox>
-            <ButtonBox>
-              <SignInButton type="google" onSuccess={onSuccess} onFailure={onFailure} />
-            </ButtonBox> */}
           </Buttons>
         </Row>
       </FormBox>
