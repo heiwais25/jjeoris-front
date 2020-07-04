@@ -108,19 +108,9 @@ export function getUserInfo() {
 export function signOut() {
   return async (dispatch: Dispatch) => {
     try {
-      window.Kakao.API.request({
-        url: "/v1/user/unlink",
-        success: function (res) {
-          console.log("Success to logout");
-        },
-        fail: function (err) {
-          console.log("Fail to logout", err);
-        },
-      });
+      dispatch(setSignedOut());
     } catch (err) {
       console.log("error", err);
-    } finally {
-      dispatch(setSignedOut());
     }
   };
 }

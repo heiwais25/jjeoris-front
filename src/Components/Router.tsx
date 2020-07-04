@@ -8,6 +8,7 @@ import { Profile } from "../Icons";
 import { getAccessToken } from "../Service/localStorageService";
 import { useDispatch } from "react-redux";
 import { setSignedIn, setSignedOut } from "../Slices/auth";
+import { useEffect, useCallback } from "react";
 
 const ContainerWrapper = styled.div`
   width: 100%;
@@ -26,13 +27,20 @@ export default () => {
   const { pathname } = useLocation();
   const dispatch = useDispatch();
 
-  setInterval(() => {
+  const checkSignIn = useCallback(() => {
     if (getAccessToken()) {
       dispatch(setSignedIn());
     } else {
       dispatch(setSignedOut());
     }
-  }, 5000);
+  }, [dispatch]);
+
+  useEffect(() => {
+    checkSignIn();
+    setInterval(() => {
+      checkSignIn();
+    }, 5000);
+  }, [checkSignIn]);
 
   const isHeaderIncluded = !pathname.startsWith("/auth");
   return (

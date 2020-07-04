@@ -118,9 +118,18 @@ export default ({
               <Icon>
                 <Shuffle size={20} />
               </Icon>
-              <Icon onClick={isSignedIn ? openProfilePopOver : () => moveToSignIn()}>
-                <Profile size={16} />
-              </Icon>
+              {/* TODO : Icon을 따로 할 필요는 없을까? */}
+              {isSignedIn && (
+                <Icon onClick={openProfilePopOver}>
+                  <Profile size={16} />
+                </Icon>
+              )}
+              {!isSignedIn && (
+                <Icon onClick={moveToSignIn}>
+                  <Profile size={16} />
+                </Icon>
+              )}
+
               <ProfilePopover
                 closeProfilePopOver={closeProfilePopOver}
                 profilePopOverAnchor={profilePopOverAnchor}
