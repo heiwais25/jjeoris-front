@@ -6,6 +6,11 @@ import { ISuccessArgs } from "../Components/SignInButton/SignInButton";
 import { useDispatch, useSelector } from "react-redux";
 import { signIn } from "../Slices/auth";
 import { authSelector } from "../Slices";
+import { toast } from "react-toastify";
+import NaverSignInButton from "../Components/SignInButton/NaverSignInButton";
+import { Kakao } from "../Icons";
+import KakaoSignInButton from "../Components/SignInButton/KakaoSignInButton";
+import GoogleSignInButton from "../Components/SignInButton/GoogleSignInButton";
 
 const Container = styled.div`
   width: 100%;
@@ -75,20 +80,16 @@ export default () => {
 
   const onSuccess = ({ name, email }: ISuccessArgs) => {
     console.log(name, email);
-    dispatch(signIn(name, email));
+    dispatch(signIn(name, email, () => history.push("/")));
+  };
+
+  const onFailure = () => {
+    toast.error("로그인을 실패햇습니다.");
   };
 
   // 이미 로그인했다면 Main page로 이동
 
   // 새롭게 로그인한 경우 Main Page로 이동
-
-  useEffect(() => {
-    if (isSignedIn) {
-      setTimeout(() => {
-        history.push("/");
-      }, 2000);
-    }
-  }, [isSignedIn]);
 
   return (
     <Container>
@@ -106,14 +107,20 @@ export default () => {
         <Row>
           <Buttons>
             <ButtonBox>
-              <SignInButton type="kakao" onSuccess={onSuccess} />
+              <NaverSignInButton onSuccess={onSuccess} onFailure={onFailure} />
             </ButtonBox>
             <ButtonBox>
-              <SignInButton type="naver" onSuccess={onSuccess} />
+              <KakaoSignInButton onSuccess={onSuccess} onFailure={onFailure} />
             </ButtonBox>
             <ButtonBox>
-              <SignInButton type="google" onSuccess={onSuccess} />
+              <GoogleSignInButton onSuccess={onSuccess} onFailure={onFailure} />
             </ButtonBox>
+            {/* <ButtonBox>
+              <SignInButton type="naver" onSuccess={onSuccess} onFailure={onFailure} />
+            </ButtonBox>
+            <ButtonBox>
+              <SignInButton type="google" onSuccess={onSuccess} onFailure={onFailure} />
+            </ButtonBox> */}
           </Buttons>
         </Row>
       </FormBox>

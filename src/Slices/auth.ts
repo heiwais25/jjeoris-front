@@ -66,7 +66,7 @@ export const {
 } = authSlice.actions;
 export default authSlice.reducer;
 
-export function signIn(username: string, email: string) {
+export function signIn(username: string, email: string, onSuccess: () => void) {
   return async (dispatch: Dispatch) => {
     dispatch(signInStatrt());
 
@@ -85,6 +85,7 @@ export function signIn(username: string, email: string) {
       const token = "123";
 
       dispatch(signInSuccess({ token, user: userInfo }));
+      onSuccess();
     } catch (error) {
       dispatch(signInFailure());
     } finally {
