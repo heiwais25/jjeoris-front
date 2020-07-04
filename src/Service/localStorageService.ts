@@ -6,6 +6,10 @@ const getProviderTokenKey = (provider: ITokenProvider) => {
   return `TOKEN_KEY_${provider.toUpperCase()}`;
 };
 
+export const hasLogin = () => {
+  return !!getAccessToken();
+};
+
 export const getAccessToken = () => {
   return localStorage.getItem(TOKEN_KEY);
 };
@@ -18,10 +22,7 @@ export const clearAccessToken = () => {
   return localStorage.removeItem(TOKEN_KEY);
 };
 
-export const setOAtuhAccessToken = (
-  provider: ITokenProvider,
-  token: string
-) => {
+export const setOAtuhAccessToken = (provider: ITokenProvider, token: string) => {
   return localStorage.setItem(getProviderTokenKey(provider), token);
 };
 
