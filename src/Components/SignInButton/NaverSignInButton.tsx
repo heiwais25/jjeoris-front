@@ -31,7 +31,7 @@ export default ({
     clientId: process.env.REACT_APP_NAVER_CLIENT_ID || "",
     callbackUrl: process.env.REACT_APP_NAVER_CALLBACK_URL || "",
     onSuccess: onSuccessNaver,
-    onFailure: () => {},
+    onFailure,
   });
 
   useEffect(() => {
@@ -42,15 +42,7 @@ export default ({
 
   return (
     <>
-      <SignInButton
-        bgColor={bgColor}
-        color={color}
-        text={text}
-        icon={icon}
-        onClick={signIn}
-        onSuccess={onSuccess}
-        onFailure={onFailure}
-      />
+      <SignInButton bgColor={bgColor} color={color} text={text} icon={icon} onClick={signIn} />
       <div id={NAVER_DEFAULT_BUTTON_ID}></div>
     </>
   );

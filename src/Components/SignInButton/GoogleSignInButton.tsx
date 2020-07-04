@@ -40,12 +40,10 @@ export default ({
           text={text}
           icon={icon}
           onClick={props.onClick}
-          onSuccess={onSuccess}
-          onFailure={onFailure}
         />
       )}
       onSuccess={onSuccessGoogle}
-      onFailure={onSuccessGoogle}
+      onFailure={onFailure}
       cookiePolicy={"single_host_origin"}
     />
   );

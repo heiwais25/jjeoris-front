@@ -37,15 +37,5 @@ export default ({
     }
   };
 
-  return (
-    <SignInButton
-      bgColor={bgColor}
-      color={color}
-      text={text}
-      icon={icon}
-      onClick={onClick}
-      onSuccess={onSuccess}
-      onFailure={onFailure}
-    />
-  );
+  return <SignInButton bgColor={bgColor} color={color} text={text} icon={icon} onClick={onClick} />;
 };
